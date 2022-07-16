@@ -1,0 +1,51 @@
+* {
+  padding: 0px;
+  margin: 0px;
+}
+
+#calculator {
+  padding: 20px;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+#display {
+  border: 1px solid black;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  height: 50px;
+  font-size: 30px;
+}
+
+#buttons{
+  display: flex;
+  height: 240px;
+}
+
+#main {
+  display: flex;
+  flex-flow: row wrap;
+  flex: 3;
+}
+
+#side {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  flex: 2;
+}
+
+button {
+  margin: 5px;
+  font-size: 18px;
+  width: 50px;
+  height: 50px;
+}
+
+#equals {
+  height: 110px;
+}
