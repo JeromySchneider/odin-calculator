@@ -30,3 +30,12 @@ function operate(a, b, operator) {
       break;
   }
 }
+
+const buttons = document.querySelectorAll("button");
+const display = document.querySelector("#display > p");
+
+buttons.forEach((button) => {
+  button.addEventListener("click", (e) => {
+    display.textContent += e.target.value;
+  });
+});
