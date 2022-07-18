@@ -1,6 +1,7 @@
 * {
   padding: 0px;
   margin: 0px;
+  font-family: sans-serif;
 }
 
 #calculator {
@@ -15,10 +16,18 @@
   border: 1px solid black;
   margin-bottom: 10px;
   display: flex;
+  flex-direction: column;
   align-items: flex-end;
-  justify-content: flex-end;
   height: 50px;
   font-size: 30px;
+}
+
+#display #displayAlt {
+  font-size: 15px;
+}
+
+#display #displayMain {
+  margin-top: auto;
 }
 
 #buttons{
@@ -40,10 +49,10 @@
 }
 
 button {
-  margin: 5px;
   font-size: 18px;
   width: 50px;
   height: 50px;
+  margin: 5px;
 }
 
 #equals {
