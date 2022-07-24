@@ -15,66 +15,92 @@ function divide(a, b) {
 }
 
 function operate(a, b, operator) {
+  let result;
   switch(operator) {
     case "+":
-      return add(a, b);
+      result = add(a, b);
       break;
     case "-":
-      return subtract(a, b);
+      result = subtract(a, b);
       break;
     case "×":
-      return multiply(a, b);
+      result = multiply(a, b);
       break;
     case "÷":
-      return divide(a, b);
+      result = divide(a, b);
       break;
   }
+  return Math.round(result * 100) / 100;
+}
+
+function resetCalc() {
+  firstValue = "";
+  secondValue = "";
+  operator = "";
+  displayMain.textContent = "";
+  displayAlt.textContent = "";
+}
+
+function displayResult() {
+  secondValue = displayMain.textContent;
+  displayAlt.textContent += ` ${secondValue} =`
+  displayMain.textContent = operate(firstValue, secondValue, operator);
+  operator = "";
 }
 
 const buttons = document.querySelectorAll("button");
 const displayMain = document.querySelector("#display > #displayMain");
 const displayAlt = document.querySelector("#display > #displayAlt");
+let regex = new RegExp(/\+|-|×|÷/);
 let firstValue;
 let secondValue;
 let operator;
+let lastInput;
+let currentInput;
 
 buttons.forEach((button) => {
   button.addEventListener("click", (e) => {
+    lastInput = currentInput;
+    currentInput = e.target.value;
+
     switch(e.target.value) {
       case "C":
-        firstValue = "";
-        secondValue = "";
-        operator = "";
-        displayMain.textContent = "";
-        displayAlt.textContent = "";
+        resetCalc();
         break;
       case "←":
         displayMain.textContent = displayMain.textContent.slice(0, -1);
         break;
       case "+/-":
-        displayMain.textContent *= -1;
-        break;
-      case "+":
-      case "-":
-      case "×":
-      case "÷":
-        if (operator) {
-          secondValue = displayMain.textContent;
-          displayMain.textContent = operate(firstValue, secondValue, operator);
-          displayAlt.textContent += `${secondValue} = `
+        if (displayMain.textContent != "") {
+          displayMain.textContent *= -1;
         }
-        firstValue = displayMain.textContent;
-        operator = e.target.value;
-        displayAlt.textContent += `${firstValue} ${operator} `
-        displayMain.textContent = "";
+        break;
+      case ".":
+        if (!displayMain.textContent.includes(".")) {
+          displayMain.textContent += e.target.value;
+        }
         break;
       case "=":
-        secondValue = displayMain.textContent;
-        displayAlt.textContent += `${secondValue} = `
-        displayMain.textContent = operate(firstValue, secondValue, operator);
+        if (operator && displayMain.textContent != "") {
+          displayResult();
+        }
         break;
-      default:
-        displayMain.textContent += e.target.value;
-    }
+        case "+":
+        case "-":
+        case "×":
+        case "÷":
+          if (regex.test(lastInput) && regex.test(currentInput)) {
+            break;
+          } else if (operator) {
+            displayResult();
+          }
+          operator = e.target.value;
+          firstValue = displayMain.textContent;
+          displayAlt.textContent += ` ${firstValue} ${operator}`
+          displayMain.textContent = "";
+          break;
+        default:
+          displayMain.textContent += e.target.value;
+      }
+    });
   });
-});
