@@ -27,7 +27,11 @@ function operate(a, b, operator) {
       result = multiply(a, b);
       break;
     case "÷":
-      result = divide(a, b);
+      if (b === "0") {
+        return "ERROR";
+      } else {
+        result = divide(a, b);
+      }      
       break;
   }
   return Math.round(result * 100) / 100;
@@ -43,7 +47,11 @@ function resetCalc() {
 
 function displayResult() {
   secondValue = displayMain.textContent;
-  displayAlt.textContent += ` ${secondValue} =`
+  if (displayAlt.textContent.length < 30) {
+    displayAlt.textContent += ` ${secondValue} =`;
+  } else {
+    displayAlt.textContent = ` ${firstValue} ${operator} ${secondValue} =`;
+  }
   displayMain.textContent = operate(firstValue, secondValue, operator);
   operator = "";
 }
@@ -60,9 +68,13 @@ let currentInput;
 
 buttons.forEach((button) => {
   button.addEventListener("click", (e) => {
+    if (displayMain.textContent === "ERROR") {
+      resetCalc();
+    }
+    
     lastInput = currentInput;
     currentInput = e.target.value;
-
+    
     switch(e.target.value) {
       case "C":
         resetCalc();
@@ -96,11 +108,15 @@ buttons.forEach((button) => {
           }
           operator = e.target.value;
           firstValue = displayMain.textContent;
-          displayAlt.textContent += ` ${firstValue} ${operator}`
+          displayAlt.textContent += ` ${firstValue} ${operator}`;
           displayMain.textContent = "";
           break;
         default:
-          displayMain.textContent += e.target.value;
-      }
+          if (displayMain.textContent.length < 18) {
+            displayMain.textContent += e.target.value;
+          } else {
+            displayMain.textContent = "ERROR";
+          }
+        }
     });
   });
