@@ -34,7 +34,7 @@ function operate(a, b, operator) {
       }      
       break;
   }
-  return Math.round(result * 100) / 100;
+  return (Math.round(result * 100) / 100);
 }
 
 function resetCalc() {
@@ -47,11 +47,7 @@ function resetCalc() {
 
 function displayResult() {
   secondValue = displayMain.textContent;
-  if (displayAlt.textContent.length < 30) {
-    displayAlt.textContent += ` ${secondValue} =`;
-  } else {
-    displayAlt.textContent = ` ${firstValue} ${operator} ${secondValue} =`;
-  }
+  displayAlt.textContent += ` ${secondValue} =`;
   displayMain.textContent = operate(firstValue, secondValue, operator);
   operator = "";
 }
@@ -89,7 +85,11 @@ buttons.forEach((button) => {
         break;
       case ".":
         if (!displayMain.textContent.includes(".")) {
-          displayMain.textContent += e.target.value;
+          if (displayMain.textContent === "") {
+            displayMain.textContent = 0 + e.target.value;
+          } else {
+            displayMain.textContent += e.target.value;
+          }
         }
         break;
       case "=":
@@ -112,11 +112,7 @@ buttons.forEach((button) => {
           displayMain.textContent = "";
           break;
         default:
-          if (displayMain.textContent.length < 18) {
             displayMain.textContent += e.target.value;
-          } else {
-            displayMain.textContent = "ERROR";
-          }
         }
     });
   });
