@@ -108,11 +108,15 @@ function handleEvent(e) {
       } else if (operator) {
         displayResult();
       }
-      operator = currentInput;
-      firstValue = displayMain.textContent;
-      displayAlt.textContent += ` ${firstValue} ${operator}`;
-      displayMain.textContent = "";
-      break;
+      if (displayMain.textContent === "ERROR") {
+        break;
+      } else {
+        operator = currentInput;
+        firstValue = displayMain.textContent;
+        displayAlt.textContent += ` ${firstValue} ${operator}`;
+        displayMain.textContent = "";
+        break;
+      }
     case "1":
     case "2":
     case "3":
