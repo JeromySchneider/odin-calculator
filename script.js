@@ -1,3 +1,13 @@
+const buttons = document.querySelectorAll("button");
+const displayMain = document.querySelector("#display > #displayMain");
+const displayAlt = document.querySelector("#display > #displayAlt");
+let regex = new RegExp(/\+|-|\*|\//);
+let firstValue;
+let secondValue;
+let operator;
+let lastInput;
+let currentInput;
+
 function add(a, b) {
   return Number(a) + Number(b);
 }
@@ -23,10 +33,10 @@ function operate(a, b, operator) {
     case "-":
       result = subtract(a, b);
       break;
-    case "×":
+    case "*":
       result = multiply(a, b);
       break;
-    case "÷":
+    case "/":
       if (b === "0") {
         return "ERROR";
       } else {
@@ -52,67 +62,79 @@ function displayResult() {
   operator = "";
 }
 
-const buttons = document.querySelectorAll("button");
-const displayMain = document.querySelector("#display > #displayMain");
-const displayAlt = document.querySelector("#display > #displayAlt");
-let regex = new RegExp(/\+|-|×|÷/);
-let firstValue;
-let secondValue;
-let operator;
-let lastInput;
-let currentInput;
+function handleEvent(e) {
+  if (displayMain.textContent === "ERROR") {
+    resetCalc();
+  }
+  
+  lastInput = currentInput;
+  currentInput = e;
+  
+  switch(currentInput) {
+    case "C":
+    case "Escape":
+      resetCalc();
+      break;
+    case "←":
+    case "Backspace":
+      displayMain.textContent = displayMain.textContent.slice(0, -1);
+      break;
+    case "+/-":
+      if (displayMain.textContent != "") {
+        displayMain.textContent *= -1;
+      }
+      break;
+    case ".":
+      if (!displayMain.textContent.includes(".")) {
+        if (displayMain.textContent === "") {
+          displayMain.textContent = 0 + currentInput;
+        } else {
+          displayMain.textContent += currentInput;
+        }
+      }
+      break;
+    case "=":
+    case "Enter":
+      if (operator && displayMain.textContent != "") {
+        displayResult();
+      }
+      break;
+    case "+":
+    case "-":
+    case "*":
+    case "/":
+      if (regex.test(lastInput) && regex.test(currentInput)) {
+        break;
+      } else if (operator) {
+        displayResult();
+      }
+      operator = currentInput;
+      firstValue = displayMain.textContent;
+      displayAlt.textContent += ` ${firstValue} ${operator}`;
+      displayMain.textContent = "";
+      break;
+    case "1":
+    case "2":
+    case "3":
+    case "4":
+    case "5":
+    case "6":
+    case "7":
+    case "8":
+    case "9":
+    case "0":
+      displayMain.textContent += currentInput;
+  }
+}
 
 buttons.forEach((button) => {
-  button.addEventListener("click", (e) => {
-    if (displayMain.textContent === "ERROR") {
-      resetCalc();
-    }
-    
-    lastInput = currentInput;
-    currentInput = e.target.value;
-    
-    switch(e.target.value) {
-      case "C":
-        resetCalc();
-        break;
-      case "←":
-        displayMain.textContent = displayMain.textContent.slice(0, -1);
-        break;
-      case "+/-":
-        if (displayMain.textContent != "") {
-          displayMain.textContent *= -1;
-        }
-        break;
-      case ".":
-        if (!displayMain.textContent.includes(".")) {
-          if (displayMain.textContent === "") {
-            displayMain.textContent = 0 + e.target.value;
-          } else {
-            displayMain.textContent += e.target.value;
-          }
-        }
-        break;
-      case "=":
-        if (operator && displayMain.textContent != "") {
-          displayResult();
-        }
-        break;
-        case "+":
-        case "-":
-        case "×":
-        case "÷":
-          if (regex.test(lastInput) && regex.test(currentInput)) {
-            break;
-          } else if (operator) {
-            displayResult();
-          }
-          operator = e.target.value;
-          firstValue = displayMain.textContent;
-          displayAlt.textContent += ` ${firstValue} ${operator}`;
-          displayMain.textContent = "";
-          break;
-        default:
-            displayMain.textContent += e.target.value;
-        }
-    });
+  button.addEventListener("mousedown", (e) => {
+    handleEvent(e.target.value);
+    e.preventDefault();
   });
+});
+
+window.addEventListener("keydown", (e) => {
+  handleEvent(e.key);
+  e.preventDefault();
+});
